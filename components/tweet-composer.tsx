@@ -8,19 +8,21 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { ImageIcon, VideoIcon, X, Loader2 } from "lucide-react"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 const MAX_TWEET_LENGTH = 280
 const MAX_FILES = 4
 const DEFAULT_REPLY_TEXT = "このツイートはおれったーから投稿されています。"
 const REPLY_TEXT_STORAGE_KEY = "oretter_reply_text"
+const AUTO_REPLY_ENABLED_KEY = "oretter_auto_reply_enabled"
 
 export function TweetComposer() {
   const [text, setText] = useState("")
   const [files, setFiles] = useState<File[]>([])
   const [isPosting, setIsPosting] = useState(false)
   const [replyText, setReplyText] = useState(DEFAULT_REPLY_TEXT)
+  const [autoReplyEnabled, setAutoReplyEnabled] = useState(true)
   const [showFlush, setShowFlush] = useState(false)
   const { toast } = useToast()
 
@@ -29,11 +31,19 @@ export function TweetComposer() {
     if (savedReplyText) {
       setReplyText(savedReplyText)
     }
+    const savedAutoReplyEnabled = localStorage.getItem(AUTO_REPLY_ENABLED_KEY)
+    if (savedAutoReplyEnabled !== null) {
+      setAutoReplyEnabled(savedAutoReplyEnabled === "true")
+    }
   }, [])
 
   useEffect(() => {
     localStorage.setItem(REPLY_TEXT_STORAGE_KEY, replyText)
   }, [replyText])
+
+  useEffect(() => {
+    localStorage.setItem(AUTO_REPLY_ENABLED_KEY, String(autoReplyEnabled))
+  }, [autoReplyEnabled])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: "image" | "video") => {
     const selectedFiles = Array.from(e.target.files || [])
@@ -83,7 +93,7 @@ export function TweetComposer() {
         body: JSON.stringify({
           text,
           files: files.map((f) => f.name),
-          replyText,
+          replyText: autoReplyEnabled ? replyText : null,
         }),
       })
 
@@ -163,17 +173,25 @@ export function TweetComposer() {
             </div>
           )}
 
-          <div className="pt-4 border-t space-y-2">
-            <Label htmlFor="reply-text" className="text-sm text-muted-foreground">
-              自動リプライ
-            </Label>
-            <Input
+          <div className="pt-4 border-t space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="auto-reply-toggle" className="text-sm text-muted-foreground">
+                自動リプライ
+              </Label>
+              <Switch
+                id="auto-reply-toggle"
+                checked={autoReplyEnabled}
+                onCheckedChange={setAutoReplyEnabled}
+                disabled={isPosting}
+              />
+            </div>
+            <Textarea
               id="reply-text"
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="リプライのテキストを入力"
-              disabled={isPosting}
-              className="text-sm"
+              disabled={isPosting || !autoReplyEnabled}
+              className="min-h-20 resize-none text-sm border-0 focus-visible:ring-0 px-4 py-3"
             />
           </div>
         </CardContent>

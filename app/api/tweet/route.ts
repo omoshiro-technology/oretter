@@ -53,16 +53,17 @@ export async function POST(request: NextRequest) {
     const tweet = await client.v2.tweet(tweetPayload)
     const tweetId = tweet.data.id
 
-    // 固定リプライの投稿
-    try {
-      await client.v2.tweet({
-        text: replyText || "このツイートはおれったーから投稿されています。",
-        reply: {
-          in_reply_to_tweet_id: tweetId,
-        },
-      })
-    } catch (error) {
-      console.error("[v0] Failed to post reply, but main tweet was successful:", error)
+    if (replyText) {
+      try {
+        await client.v2.tweet({
+          text: replyText,
+          reply: {
+            in_reply_to_tweet_id: tweetId,
+          },
+        })
+      } catch (error) {
+        console.error("[v0] Failed to post reply, but main tweet was successful:", error)
+      }
     }
 
     return NextResponse.json({
