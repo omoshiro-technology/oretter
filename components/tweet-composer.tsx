@@ -135,7 +135,7 @@ export function TweetComposer() {
       )}
 
       <Card className="shadow-lg">
-        <CardContent className="pt-6 space-y-4">
+        <CardContent className="pt-6 space-y">
           <Textarea
             placeholder="いまどうしてる？"
             value={text}
@@ -191,7 +191,7 @@ export function TweetComposer() {
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="リプライのテキストを入力"
               disabled={isPosting || !autoReplyEnabled}
-              className="min-h-20 resize-none text-sm border-0 focus-visible:ring-0 px-4 py-3"
+              className="min-h-40 md:min-h-54 resize-none text-sm border-0 focus-visible:ring-0 px-4 py-3"
             />
           </div>
         </CardContent>
