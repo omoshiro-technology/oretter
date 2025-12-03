@@ -2,6 +2,9 @@
 
 Twitter中毒を防ぐ、投稿だけに集中できるシンプルなTwitterクライアント。
 
+<img width="1234" height="1124" alt="image" src="https://github.com/user-attachments/assets/3976dbf3-7698-4a5c-9b04-d85e6fae359d" />
+
+
 ## 機能
 
 - ✍️ テキスト投稿
