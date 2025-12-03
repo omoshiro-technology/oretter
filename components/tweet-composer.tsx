@@ -128,7 +128,7 @@ export function TweetComposer() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="text-center animate-in zoom-in duration-300">
             <div className="text-8xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-              Flush!
+              Flush!💩
             </div>
           </div>
         </div>
